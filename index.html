@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wikipedia Erişilebilir Örnek</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="light-theme">
+  <header role="banner">
+    <h1>Wikipedia</h1>
+    <nav aria-label="Ana Menü">
+      <ul>
+        <li><a href="#">Ana Sayfa</a></li>
+        <li><a href="#">Rastgele Madde</a></li>
+        <li><a href="#">Hakkımızda</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="content-wrapper">
+    <!-- Sol Menü -->
+    <aside class="sidebar">
+      <h3>Hızlı Menü</h3>
+      <ul>
+        <li><a href="#">Anasayfa</a></li>
+        <li><a href="#">Sıkça Sorulan Sorular</a></li>
+      
+      </ul>
+    </aside>
+
+    <!-- Ana İçerik -->
+    <main role="main">
+      <section>
+        <h2>Ara</h2>
+        <form role="search" aria-label="Site içi arama" onsubmit="event.preventDefault();">
+          <label for="search">Kelime girin:</label>
+          <div class="search-wrapper">
+            <input type="text" id="search" name="search" aria-label="Arama kutusu" />
+            <button type="submit" aria-label="Ara">🔍</button>
+            <button type="button" id="micBtn" aria-label="Mikrofon ile ara">🎤</button>
+          </div>
+          <p id="micStatus" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section>
+        <h2>Günün Maddesi</h2>
+        <article>
+          <h3>HTML (HyperText Markup Language)</h3>
+          <p>
+            HTML, web sayfalarının iskeletini oluşturan işaretleme dilidir. Erişilebilirlik için
+            doğru etiket yapısı önemlidir.
+          </p>
+          <img src="html-logo.png" alt="HTML logosu" />
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <!-- Sağ Panel (Tema Seçici) -->
+  <aside class="right-panel">
+    <h3>Tema Seç</h3>
+    <button id="lightBtn">Açık Tema</button>
+    <button id="darkBtn">Koyu Tema</button>
+  </aside>
+
+  <footer role="contentinfo">
+    <p>&copy; 2025 Wikipedia Örneği</p>
+  </footer>
+
+  <script>
+    const micBtn = document.getElementById("micBtn");
+    const searchInput = document.getElementById("search");
+    const micStatus = document.getElementById("micStatus");
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.lang = "tr-TR";
+
+      micBtn.addEventListener("click", () => {
+        recognition.start();
+        micStatus.textContent = "Dinleniyor...";
+      });
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        searchInput.value = transcript;
+        micStatus.textContent = "Sesle giriş tamamlandı.";
+      };
+
+      recognition.onerror = () => {
+        micStatus.textContent = "Bir hata oluştu.";
+      };
+
+      recognition.onend = () => {
+        micStatus.textContent += " (Bitti)";
+      };
+    }
+
+    // Tema değiştirme
+    const lightBtn = document.getElementById("lightBtn");
+    const darkBtn = document.getElementById("darkBtn");
+
+    lightBtn.addEventListener("click", () => {
+      document.body.classList.remove("dark-theme");
+      document.body.classList.add("light-theme");
+    });
+
+    darkBtn.addEventListener("click", () => {
+      document.body.classList.remove("light-theme");
+      document.body.classList.add("dark-theme");
+    });
+  </script>
+</body>
+</html>
